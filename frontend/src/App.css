@@ -1,0 +1,106 @@
+.signin-page {
+  min-height: 100svh;
+  display: grid;
+  place-items: center;
+  padding: 32px 20px;
+  background:
+    linear-gradient(135deg, rgba(27, 94, 84, 0.14), transparent 38%),
+    linear-gradient(315deg, rgba(220, 92, 67, 0.12), transparent 42%),
+    var(--background);
+}
+
+.signin-panel {
+  width: min(100%, 420px);
+  display: grid;
+  gap: 18px;
+}
+
+.brand-mark {
+  width: 48px;
+  height: 48px;
+  display: grid;
+  place-items: center;
+  margin: 0 auto;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  color: #114d45;
+  background: #f7fbf6;
+  box-shadow: 0 12px 30px rgba(16, 24, 40, 0.08);
+}
+
+.signin-card {
+  overflow: hidden;
+}
+
+.signin-card-header {
+  text-align: center;
+  padding-bottom: 24px;
+}
+
+.signin-form {
+  display: grid;
+  gap: 18px;
+}
+
+.field-group {
+  display: grid;
+  gap: 8px;
+}
+
+.field-group label,
+.label-row a,
+.signin-footer {
+  font-size: 0.875rem;
+}
+
+.field-group label {
+  font-weight: 500;
+  color: var(--foreground);
+}
+
+.label-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.label-row a,
+.signin-footer a {
+  color: #0f766e;
+  font-weight: 500;
+  text-decoration: none;
+}
+
+.label-row a:hover,
+.signin-footer a:hover {
+  text-decoration: underline;
+}
+
+.input-shell {
+  position: relative;
+}
+
+.input-shell svg {
+  position: absolute;
+  left: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--muted-foreground);
+  pointer-events: none;
+}
+
+.input-shell input {
+  padding-left: 38px;
+}
+
+.signin-submit {
+  width: 100%;
+  margin-top: 4px;
+}
+
+.signin-footer {
+  justify-content: center;
+  gap: 6px;
+  color: var(--muted-foreground);
+}
