@@ -9,10 +9,32 @@
     var(--background);
 }
 
+.signin-layout {
+  width: min(100%, 1040px);
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  align-items: center;
+  gap: 48px;
+}
+
 .signin-panel {
   width: min(100%, 420px);
   display: grid;
   gap: 18px;
+  justify-self: center;
+}
+
+.signin-image-panel {
+  display: grid;
+  place-items: center;
+  min-width: 0;
+}
+
+.signin-illustration {
+  width: min(100%, 440px);
+  height: auto;
+  display: block;
+  object-fit: contain;
 }
 
 .brand-mark {
@@ -103,4 +125,23 @@
   justify-content: center;
   gap: 6px;
   color: var(--muted-foreground);
+}
+
+@media (max-width: 768px) {
+  .signin-layout {
+    grid-template-columns: 1fr;
+    gap: 28px;
+  }
+
+  .signin-panel {
+    order: 1;
+  }
+
+  .signin-image-panel {
+    order: 2;
+  }
+
+  .signin-illustration {
+    width: min(100%, 320px);
+  }
 }

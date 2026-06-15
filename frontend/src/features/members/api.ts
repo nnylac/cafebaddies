@@ -1,42 +1,64 @@
 import { doc, getDoc, serverTimestamp, setDoc } from "firebase/firestore"
 
 import { db } from "@/lib/firebase"
-import { MAIN_TRIP_ID } from "@/shared/constants"
 
-export async function createOrUpdateMemberFromGoogleUser(input: {
+const TRIP_ID = "korea-2026"
+
+type CreateOrUpdateMemberInput = {
   userId: string
   email: string
   displayName: string
-  photoURL?: string
-}) {
-  const memberRef = doc(db, "trips", MAIN_TRIP_ID, "members", input.userId)
-  const existingMember = await getDoc(memberRef)
+  photoURL: string
+}
 
-  if (existingMember.exists()) {
-    await setDoc(
-      memberRef,
-      {
-        email: input.email.toLowerCase(),
-        displayName: input.displayName,
-        photoURL: input.photoURL ?? "",
-        lastSeenAt: serverTimestamp(),
-      },
-      { merge: true }
-    )
-
-    return input.userId
+export async function createOrUpdateMemberFromGoogleUser({
+  userId,
+  email,
+  displayName,
+  photoURL,
+}: CreateOrUpdateMemberInput) {
+  if (!email) {
+    throw new Error("Unable to sign in because this Google account has no email.")
   }
 
-  await setDoc(memberRef, {
-    userId: input.userId,
-    email: input.email.toLowerCase(),
-    displayName: input.displayName,
-    photoURL: input.photoURL ?? "",
-    color: "#F9A8D4",
-    role: "member",
-    joinedAt: serverTimestamp(),
-    lastSeenAt: serverTimestamp(),
-  })
+  const normalizedEmail = email.toLowerCase()
 
-  return input.userId
+  const allowedUserRef = doc(db, "allowedUsers", normalizedEmail)
+  const allowedUserSnap = await getDoc(allowedUserRef)
+
+  if (!allowedUserSnap.exists()) {
+    throw new Error("This Google account is not invited to this trip.")
+  }
+
+  const allowedUserData = allowedUserSnap.data()
+
+  const memberRef = doc(
+    db,
+    "trips",
+    TRIP_ID,
+    "members",
+    normalizedEmail,
+  )
+
+  const memberSnap = await getDoc(memberRef)
+
+  await setDoc(
+    memberRef,
+    {
+      email: normalizedEmail,
+      displayName,
+      role: allowedUserData.role ?? "member",
+      color: allowedUserData.color ?? "#0f766e",
+      photoURL,
+      userId,
+      lastSeenAt: serverTimestamp(),
+
+      /**
+       * Only set createdAt when the member is first created.
+       * This prevents overwriting createdAt every time they log in.
+       */
+      ...(memberSnap.exists() ? {} : { createdAt: serverTimestamp() }),
+    },
+    { merge: true },
+  )
 }
